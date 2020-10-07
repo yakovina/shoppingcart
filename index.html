@@ -15,7 +15,7 @@
                 <span class="top-cart-info__item">
                      Товаров в корзине - <span class="red-info" id="js-totalcount">XXX</span>,
                       на сумму <span class="red-info" id="js-totalcountprice">XXX</span> грн</span>
-                <button class="btn-check">Оформить заказ</button>
+                <button class="btn-check" id = "js-openform">Оформить заказ</button>
             </div>
         </div><!-- /.top-cart-info -->
 
@@ -241,6 +241,19 @@
             </div>
         </div>
     </footer>
+    <div class="form-wrapper">
+        <form action="" class="form " id="js-form">
+            <div class="field">
+                <label for="name" class="field__label">Имя</label>
+                <input type="text" name ="name" id="name" class="field__input">
+            </div>
+            <div class="field">
+                <label for="name" class="field__label">Email</label>
+                <input type="email" name ="email" id="email" class="field__input">
+            </div>
+            <button class="btn-check form__button" id="js-submit-button">Oтправить</button>
+        </form>
+    </div>
 </div><!-- /.app-container -->
 
 <script src="js/main.js"></script>

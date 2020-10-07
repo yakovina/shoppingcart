@@ -167,8 +167,13 @@ const goodPrices = Array.from(document.querySelectorAll('.product-box__meta p'))
 const goodsWrapper = document.querySelector('.products-box');
 const selectOfCategory = document.getElementById('js-filtercategory');
 const selectOfPrice = document.getElementById('js-filterprice');
+const form = document.getElementById('js-form');
+const formSubmitButton = form.querySelector('#js-submit-button');
+const formFields = form.querySelectorAll('.field__input');
+const openFormButton = document.getElementById('js-openform');
 let goodsArray = [];
 let goods;
+
 // const goodsPrices =
 
 //create Goods && Filter;
@@ -227,5 +232,38 @@ addToCartButtons.forEach(item => {
 })
 
 
+///form
+
+openFormButton.addEventListener('click', function () {
+form.parentElement.style.display = 'flex';
+})
+
+formSubmitButton.addEventListener('click', function (event) {
+  event.preventDefault()
+  let isFormValid = true;
+  formFields.forEach(function (item) {
+    isFormValid = isFormValid && validateField(item);
+  });
+  if(isFormValid){
+    alert('сообщение с благодарностью за покупки :D')
+    myCart.clearCart();
+    totalCount.textContent = 'XXX';
+    totalCountPrice.textContent = 'XXX';
+    form.parentElement.style.display = 'none';
+  }
+
+})
+
+function validateField(item) {
+  let value = item.value;
+  let isValid = false;
+  if(!!value && !!value.trim()){
+    isValid = true;
+  }
+  else{
+    alert(`${item.name} is required!`);
+  }
+  return isValid;
+}
 
 

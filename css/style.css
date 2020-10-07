@@ -196,3 +196,39 @@ h1, h2, h3 {
     display: flex;
     justify-content: space-around;
 }
+
+.form-wrapper{
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background-color: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.form{
+    background-color: #ffffff;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.field__input, .field__label{
+    display: block;
+    width: 100%;
+}
+.field__input{
+    height: 30px;
+}
+.field__label{
+    margin-bottom: 10px;
+}
+.field{
+    margin-bottom: 20px;
+}
+.form__button{
+    margin: 0 auto;
+    display: block;
+}
