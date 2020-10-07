@@ -1,32 +1,62 @@
 class Item {
-  constructor(name, price, count) {
+  constructor(name, price, count, category, image) {
     this.name = name;
     this.price = price;
+    this.category = category;
     this.count = count;
+    this.image = image;
+  }
+  displayGood() {
+    let goodInnerHtml = `
+                <div class="product-box__item" data-category="${this.category}">
+                    <h3 class="product-box__title">${this.name}</h3>
+                    <div class="product-box__img">
+                        <img class="img-fluid" src="${this.image}">
+                    </div>
+                    <div class="product-box__meta">
+                        <p>${this.price} грн.</p>
+                        <div class="qty">
+                            <input class="qty__item" type="number"> Кол
+                        </div>
+                        <button class="product-box__btn">Добавить</button>
+                    </div>
+                </div>
+    `
+    return goodInnerHtml
+  }
+}
+
+class Goods {
+  constructor(items) {
+    this.items = items;
+  }
+  filterGoods(categoryFilter, priceFilter) {
+    let categoryFilterInt = +categoryFilter;
+    let priceFilterInt = +priceFilter;
+
+    let currentGoods;
+    if ((!priceFilterInt && !categoryFilterInt)) currentGoods = this.items;
+
+    else {
+      currentGoods = this.items.filter((item, index) => {
+        let isPrice = false;
+        let isCategory = false;
+
+        if (priceFilterInt) {
+          isPrice = item.price < priceFilterInt;
+        }
+        if (categoryFilterInt) {
+          isCategory = item.category === categoryFilterInt;
+        }
+
+        if (priceFilterInt && categoryFilterInt) {
+          return isPrice && isCategory;
+        } else return isPrice || isCategory;
+      })
+    }
+    return currentGoods;
   }
 
-  add(item) {
-    item.id = (this.index += 1);
-    this.items.push(item);
-  }
-
-  getTotal() {
-    return this.total.toFixed(6).slice(0, -4);
-  }
-
-  getItems() {
-    return this.items;
-  }
-
-  getLength() {
-    return this.items.length;
-  }
-
-  deleteItem(item) {
-    const index = this.items.indexOf(item);
-    this.items.splice(index, 1);
-    console.log(this.items)
-  }
 }
 
 class Checkout {
@@ -98,11 +128,12 @@ class Checkout {
   }
 
   calculateTotalCount() {
-    return this.items.reduce((sum, item) =>sum + item.count, 0);
+    return this.items.reduce((sum, item) => sum + item.count, 0);
   }
 
   calculateTotalPrice() {
-    return this.items.reduce((sum, item) =>sum + item.count* item.price, 0)}
+    return this.items.reduce((sum, item) => sum + item.count * item.price, 0)
+  }
 }
 
 
@@ -128,15 +159,57 @@ class Checkout {
 
 
 let myCart = new Checkout();
-let addToCartButtons = Array.from(document.getElementsByClassName('product-box__btn'));
-let totalCount = document.getElementById('js-totalcount');
-let totalCountPrice = document.getElementById('js-totalcountprice');
+const addToCartButtons = Array.from(document.getElementsByClassName('product-box__btn'));
+const totalCount = document.getElementById('js-totalcount');
+const totalCountPrice = document.getElementById('js-totalcountprice');
+const goodNodes = Array.from(document.getElementsByClassName('product-box__item'));
+const goodPrices = Array.from(document.querySelectorAll('.product-box__meta p'));
+const goodsWrapper = document.querySelector('.products-box');
+const selectOfCategory = document.getElementById('js-filtercategory');
+const selectOfPrice = document.getElementById('js-filterprice');
+let goodsArray = [];
+let goods;
+// const goodsPrices =
 
-if(myCart.items.length){
+//create Goods && Filter;
+
+
+goodNodes.forEach(item => {
+  let name = item.querySelector('.product-box__title').textContent;
+  let price = parseInt(item.querySelector('.product-box__meta p').textContent);
+  let image = item.querySelector('.img-fluid').src;
+  let count = null;
+  let category = +item.dataset.category;
+  let itemOfGoods = new Item(name, price, count, category, image);
+  goodsArray.push(itemOfGoods);
+})
+goods = new Goods(goodsArray);
+
+selectOfCategory.addEventListener('change', function () {
+  let priceFilter = selectOfPrice.value;
+  let categoryFilter = this.value;
+  let currentGoods = goods.filterGoods(categoryFilter, priceFilter);
+  console.log(currentGoods)
+  goodsWrapper.innerHTML = '';
+  currentGoods.forEach(item => goodsWrapper.innerHTML += item.displayGood());
+});
+
+selectOfPrice.addEventListener('change', function () {
+  let priceFilter = this.value;
+  let categoryFilter = selectOfCategory.value;
+  let currentGoods = goods.filterGoods(categoryFilter, priceFilter);
+  console.log(currentGoods)
+  goodsWrapper.innerHTML = '';
+  currentGoods.forEach(item => goodsWrapper.innerHTML += item.displayGood());
+});
+
+
+
+//add item to the card
+if (myCart.items.length) {
   totalCount.textContent = myCart.calculateTotalCount();
   totalCountPrice.textContent = myCart.calculateTotalPrice();
 }
-
 addToCartButtons.forEach(item => {
   item.addEventListener('click', () => {
     let itemDOM = item.closest('.product-box__item');
@@ -152,3 +225,7 @@ addToCartButtons.forEach(item => {
     totalCountPrice.textContent = myCart.calculateTotalPrice();
   })
 })
+
+
+
+
